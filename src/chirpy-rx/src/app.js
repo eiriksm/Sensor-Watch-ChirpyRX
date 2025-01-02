@@ -1,12 +1,12 @@
 import {ToneStencil, Demodulator, Block, Decoder} from "./chirpy-rx.js";
 import {WAVEncoder} from "./wav-encoder.js";
 import {FFT} from "./fft.js";
-import {runChirpyRxTests} from "./chirpy-rx-tests.js";
+
 import {toBase64} from "./base64.js";
 import {interpretContent} from "./content.js";
 
-const showTest = false;
-const testFileName = "data-06.wav";
+const showTest = true;
+const testFileName = "char.wav";
 
 const gainVal = 10;
 const toneRate = 64/3;
@@ -205,6 +205,8 @@ function startProcessing() {
 }
 
 function startDemodulating() {
+  console.log(spectra)
+  console.log(sampleRate, fftSize, toneRate, baseFreq, freqStep, nFreqs)
 
   demodulator = new Demodulator({
     sampleRate,
@@ -230,6 +232,7 @@ function startDemodulating() {
   function demodulateSome() {
     for (let tc = 0; tc < tonesPerIter; ++tc) {
       const msec = startMsec + tonePos * demodulator.toneLenMsec;
+      console.log(msec)
       if (msec + 200 > recLenMsec) {
         decodeTones(startMsec, null);
         return;
@@ -282,8 +285,16 @@ function decodeTones(startMsec, endMsec) {
     for (let j = block.startTonePos; j < block.startTonePos + block.nTones; ++j)
       blocksHtml += " " + tones[j];
     blocksHtml += "\nBytes:";
-    for (const b of block.bytes)
-      blocksHtml += " 0x" + b.toString(16).padStart(2, "0");
+    let blocksAscii = "";
+    for (const b of block.bytes) {
+      let hex = "0x" + b.toString(16).padStart(2, "0");
+      blocksHtml += " " + hex;
+      blocksAscii += String.fromCharCode(hex)
+    }
+
+    blocksHtml += "\nASCII:";
+    blocksHtml += blocksAscii;
+
     blocksHtml += "\nCRC: 0x" + block.crc.toString(16).padStart(2, "0") + "\n\n";
   }
   elms.resBlocks.innerHTML = `<pre>${blocksHtml}</pre>`;
@@ -294,6 +305,7 @@ function decodeTones(startMsec, endMsec) {
     elms.decodingStatus.innerText = "Message cannot be reconstructed: invalid CRC in one or more blocks.";
     return;
   }
+  console.log(decoder)
   // Display decoded binary as Base64
   const base64 = toBase64(decoder.bytes);
   elms.resBase64.innerHTML = `
