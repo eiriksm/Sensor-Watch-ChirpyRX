@@ -9,7 +9,8 @@ const showTest = true;
 const testFileName = "c-slow.wav";
 
 const gainVal = 10;
-const toneRate = 48/3;
+const clockRate = 32;
+const toneRate = clockRate/3;
 const baseFreq = 2500;
 const freqStep = 250;
 const nFreqs = 9;
