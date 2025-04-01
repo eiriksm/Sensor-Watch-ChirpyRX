@@ -6,10 +6,10 @@ import {toBase64} from "./base64.js";
 import {interpretContent} from "./content.js";
 
 const showTest = true;
-const testFileName = "char.wav";
+const testFileName = "c-slow.wav";
 
 const gainVal = 10;
-const toneRate = 64/3;
+const toneRate = 32/3;
 const baseFreq = 2500;
 const freqStep = 250;
 const nFreqs = 9;
