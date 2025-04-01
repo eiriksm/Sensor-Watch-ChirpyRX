@@ -46,6 +46,11 @@ function initUI() {
   elms.lnkBlocks.addEventListener("click", () => setCtrlDecodingTab("blocks"));
   elms.lnkBase64.addEventListener("click", () => setCtrlDecodingTab("base64"));
   elms.lnkContent.addEventListener("click", () => setCtrlDecodingTab("content"));
+  // Also add an indication what clock rate is used
+  const clockRateEl = document.createElement("span");
+  clockRateEl.className = "clock-rate";
+  clockRateEl.innerText = `Clock rate: ${clockRate}`;
+  document.body.appendChild(clockRateEl);
 }
 
 function setCtrlDecodingTab(tab) {
